@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 import pandas as pd
+import logging
 
 from api.schemas import CustomerData
 from api.model_loader import model, scaler, feature_columns
 from src.data_preprocessing import preprocess_data, preprocess_for_inference
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Customer Churn Prediction API",
@@ -31,20 +35,23 @@ def predict_churn(customer: CustomerData):
         input_df, scaler=scaler, feature_columns=feature_columns
     )
 
-    # debugging
-    print("Processed input:")
-    print(processed_df.head())
-
-    print("\nNon-zero features:")
-    print(processed_df.loc[:, (processed_df != 0).any(axis=0)])
-
+    # Do guard against corrupt rows
+    if processed_df.isnull().any().any():
+        return {
+            "error": "Invalid input after preprocessing"
+        }
 
     # Prediction
     churn_prob = model.predict_proba(processed_df)[0][1]
     churn_pred = int(churn_prob >= 0.5)
 
+    # Threshold can be tuned based on business preference
+    # e.g. , lower threshold to increase recall
+
+    logger.info(f"Prediction made | Probability: {churn_prob:.3f}")
+
     return {
         "churn_prediction": churn_pred,
-        "churn_probability": round(churn_prob, 3)
+        "churn_probability": round(float(churn_prob), 3)
     }
 

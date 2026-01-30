@@ -24,3 +24,10 @@ Telco Customer Churn Dataset (public)
 - src/ → production-ready Python modules
 - api/ → FastAPI backend (in progress)
 - frontend/ → React dashboard (planned)
+
+## API Features
+- Input validation using Pydantic
+- Robust preprocessing with feature alignment
+- Probability-based churn prediction
+- Automatic API documentation (Swagger)
+

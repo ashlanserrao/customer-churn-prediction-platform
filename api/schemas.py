@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class CustomerData(BaseModel):
     gender: str
-    SeniorCitizen: int
+    SeniorCitizen: int = Field(..., ge=0, le=1)
     Partner: str
     Dependents: str
-    tenure: int
+    tenure: int = Field(..., ge=0)
     PhoneService: str
     MultipleLines: str
     InternetService: str
@@ -18,5 +18,7 @@ class CustomerData(BaseModel):
     Contract: str
     PaperlessBilling: str
     PaymentMethod: str
-    MonthlyCharges: float
-    TotalCharges: float
+    MonthlyCharges: float = Field(..., gt=0)
+    TotalCharges: float = Field(..., ge=0)
+
+
