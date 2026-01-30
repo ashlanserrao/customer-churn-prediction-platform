@@ -1,16 +1,14 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from src.config import PROCESSED_DATA_PATH
+import joblib
 
-def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
+def preprocess_data(df: pd.DataFrame, scaler: StandardScaler = None):
     """
     Clean and preprocess the Telco churn dataset
     
-    Steps:
-    - Convert TotalCharges to numeric
-    - Handle missing values
-    - Encode categorical variables
-    - Scale numerical features
+    If scaler is a None we fit new scaler (training)
+    If scaler exists we reuse scaler (inference)
     """
 
     df = df.copy()
@@ -21,11 +19,13 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     # Dropping any rows with missing totalcharges
     df = df.dropna(subset=["TotalCharges"])
 
-    # Convert the target variable to binary (0 or 1)
-    df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
+    if "Churn" in df.columns:
+        df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
+
 
     # Drop customerID (its not a feature so we drop)
-    df = df.drop(columns=["customerID"])
+    if "customerID" in df.columns:
+        df = df.drop(columns=["customerID"])
 
     # Now we seperate numerical and categorical columns
     numerical_cols = ["tenure", "MonthlyCharges", "TotalCharges"]
@@ -35,10 +35,14 @@ def preprocess_data(df: pd.DataFrame) -> pd.DataFrame:
     df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
 
     # Scale numerical features
-    scaler = StandardScaler()
-    df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+    if scaler is None:
+        scaler = StandardScaler()
+        df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
 
-    return df
+    else:
+        df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+
+    return df, scaler
 
 def save_processed_data(df: pd.DataFrame, filename: str = "processed_churn.csv") -> None:
     """
@@ -48,3 +52,6 @@ def save_processed_data(df: pd.DataFrame, filename: str = "processed_churn.csv")
     output_path = PROCESSED_DATA_PATH / filename
     df.to_csv(output_path, index=False)
     
+def save_artifact(obj, path):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(obj, path)
