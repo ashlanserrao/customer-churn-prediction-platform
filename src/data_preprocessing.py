@@ -55,3 +55,28 @@ def save_processed_data(df: pd.DataFrame, filename: str = "processed_churn.csv")
 def save_artifact(obj, path):
     path.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(obj, path)
+
+def preprocess_for_inference(df: pd.DataFrame, scaler, feature_columns):
+    """
+    Preprocess single input for inference ensuring feature alignment.
+    """
+    df = df.copy()
+
+    df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
+
+    if "customerID" in df.columns:
+        df = df.drop(columns=["customerID"])
+
+    numerical_cols = ["tenure", "MonthlyCharges", "TotalCharges"]
+    categorical_cols = [c for c in df.columns if c not in numerical_cols]
+
+    df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
+
+    #  CRITICAL STEP: align columns BEFORE scaling
+    df = df.reindex(columns=feature_columns, fill_value=0)
+
+    df[numerical_cols] = scaler.transform(df[numerical_cols])
+
+    return df
+
+
