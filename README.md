@@ -1,33 +1,63 @@
-# Customer Churn Prediction Platform
+#  Customer Churn Prediction Platform
 
-An end-to-end, industry-ready machine learning project to predict customer churn.
+An end-to-end, industry-ready machine learning system that predicts customer churn and exposes the model through a production-grade API with a React frontend dashboard.
 
-## Objective
-Predict whether a customer is likely to churn using customer demographics,
-account information, and service usage data.
+This project demonstrates the complete ML lifecycle — from business understanding and data analysis to model deployment and frontend integration.
+
+---
+
+##  Business Problem
+
+Customer churn directly impacts revenue and growth. Retaining existing customers is significantly cheaper than acquiring new ones.
+
+**Objective:**  
+Predict whether a customer is likely to churn so businesses can proactively take retention actions.
+
+---
+
+##  Solution Overview
+
+This project builds a full churn prediction platform that includes:
+
+- Exploratory Data Analysis (EDA)
+- Feature engineering & preprocessing
+- Multiple ML models with comparison
+- Model explainability using SHAP
+- Production-safe model persistence
+- FastAPI backend for inference
+- React frontend dashboard
+- Dockerized backend for deployment
+
+---
+
+##  Dataset
+
+**Telco Customer Churn Dataset (Public)**
+
+Features include:
+- Customer demographics
+- Account and billing details
+- Service usage information
+
+Target variable:
+- `Churn` (Yes / No)
+
+---
 
 ## Tech Stack
-- Python (pandas, scikit-learn, xgboost)
+
+**Backend**
+- Python
 - FastAPI
+- pandas, numpy
+- scikit-learn, xgboost
+- shap
+
+**Frontend**
 - React
-- Docker (optional)
 
-## Dataset
-Telco Customer Churn Dataset (public)
+**Infrastructure**
+- Docker
 
-## Status
-🚧 In Progress
-
-## Project Structure
-- data/ → raw and processed datasets
-- notebooks/ → EDA and experimentation
-- src/ → production-ready Python modules
-- api/ → FastAPI backend (in progress)
-- frontend/ → React dashboard (planned)
-
-## API Features
-- Input validation using Pydantic
-- Robust preprocessing with feature alignment
-- Probability-based churn prediction
-- Automatic API documentation (Swagger)
+---
 
