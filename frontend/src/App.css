@@ -1,0 +1,51 @@
+body {
+  font-family: Arial, san-serif;
+  background-color: #f4f6f8;
+}
+
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px
+}
+
+input, select, button {
+  padding: 8px;
+  font-size: 14px;
+}
+
+button {
+  grid-column: span 2;
+  background-color:#1976d2;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.high {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.low {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}

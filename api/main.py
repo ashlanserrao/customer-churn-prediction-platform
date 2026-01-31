@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import pandas as pd
 import logging
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.schemas import CustomerData
 from api.model_loader import model, scaler, feature_columns
@@ -13,6 +14,14 @@ app = FastAPI(
     title="Customer Churn Prediction API",
     description="Predict whether a customer is likely to churn",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
 )
 
 @app.get("/")
